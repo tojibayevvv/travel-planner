@@ -13,11 +13,14 @@ export default function App() {
     setItems((items) => [...items, item]);
   }
 
+  function handleDeleteItem(id) {
+    setItems((items) => items.filter((items) => items.id !== id));
+  }
   return (
     <>
       <Logo />
-      <Form onAddItems={handleAddItems}/>
-      <ItemsList items={items} />
+      <Form onAddItems={handleAddItems} />
+      <ItemsList items={items} onDeleteItem={handleDeleteItem} />
       <Stats />
     </>
   );
@@ -26,7 +29,7 @@ export default function App() {
 function Logo() {
   return <h1>Far away</h1>;
 }
-function Form({onAddItems}) {
+function Form({ onAddItems }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -65,24 +68,27 @@ function Form({onAddItems}) {
     </form>
   );
 }
-function ItemsList({ items }) {
+function ItemsList({ items, onDeleteItem }) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item key={item.id} item={item} />
+          <Item key={item.id} item={item} onDeleteItem={onDeleteItem} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ item, onDeleteItem }) {
   return (
     <li>
       <span style={item.packed ? { textDecoration: "line-through" } : null}>
         {item.quantity} {item.description}
       </span>
+      <button onClick={() => onDeleteItem(item.id)}>
+        X
+      </button>
     </li>
   );
 }
