@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Star, Trash2, Package } from "react-feather";
 
 const initialItems = [
   { id: 1, description: "Passports", quantity: 2, packed: false },
@@ -25,7 +26,7 @@ export default function App() {
     );
   }
   return (
-    <>
+    <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
       <ItemsList
@@ -34,7 +35,7 @@ export default function App() {
         onDeleteItem={handleDeleteItem}
       />
       <Stats items={items} />
-    </>
+    </div>
   );
 }
 
@@ -100,15 +101,27 @@ function ItemsList({ items, onDeleteItem, onToggleItem }) {
 function Item({ item, onDeleteItem, onToggleItem }) {
   return (
     <li>
-      <input
-        type="checkbox"
-        value={item.packed}
+      <button
+        className="icon-button"
         onClick={() => onToggleItem(item.id)}
-      />
+        style={{ background: "none", border: "none", cursor: "pointer" }}
+      >
+        <Star
+          size={24}
+          color={item.packed ? "#fbbf24" : "#9ca3af"}
+          fill={item.packed ? "#fbbf24" : "none"}
+        />
+      </button>
       <span style={item.packed ? { textDecoration: "line-through" } : null}>
         {item.quantity} {item.description}
       </span>
-      <button onClick={() => onDeleteItem(item.id)}>X</button>
+      <button
+        className="delete-button"
+        onClick={() => onDeleteItem(item.id)}
+        style={{ background: "none", border: "none", cursor: "pointer" }}
+      >
+        <Trash2 size={24} color="#52B788" />
+      </button>
     </li>
   );
 }
@@ -117,7 +130,8 @@ function Stats({ items }) {
   if (!items.length)
     return (
       <p className="stats">
-        <em>Let's pack stuff for your trip 🚀</em>
+        <Package size={32} style={{ marginRight: "1rem", verticalAlign: "middle" }} />
+        <em>Let's pack stuff for your trip</em>
       </p>
     );
   const numItems = items.length;
@@ -125,9 +139,10 @@ function Stats({ items }) {
   const percentage = Math.round((numPacked / numItems) * 100);
   return (
     <footer className="stats">
+      <Package size={32} style={{ marginRight: "1rem", verticalAlign: "middle" }} />
       <em>
         {percentage === 100
-          ? "You packed everything! You are ready to go 🛫"
+          ? "You packed everything! You are ready to go"
           : `You have ${numItems} items on your list, and you already packed ${numPacked} items (${percentage}%)`}
       </em>
     </footer>
